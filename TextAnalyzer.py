@@ -13,6 +13,7 @@ class TextAnalyzer:
         nltk.download('punkt_tab')
         self.stop_words = set(stopwords.words('english'))
 
+    ## Text Preprocessing
     def clean_text(self, text):
         """Clean by remove speical character and  normalizing"""
         text = text.lower()
@@ -21,6 +22,7 @@ class TextAnalyzer:
         text = ' '.join(text.split())
         return text
     
+    ## Tokenization
     def tokenize_sentence(self, text):
         """Tokenize text into sentence"""
         PunktSentenceTokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
@@ -34,16 +36,18 @@ class TextAnalyzer:
         text = [word for word in text if word not in self.stop_words]
         return text
 
+    ## Word Frequency
     def word_frequency(self, text, n=10):
         """Count word frequency"""
         counter = Counter(text)
         return counter.most_common(n)
     
+    ## Get Analysis
     def get_analysis(self, text):
         sent_text = ' '.join(re.sub(r'\d+', '', text.lower()).split())
         
         text = self.clean_text(text)
-        with open('nltk/clean_text.txt', 'w') as file:
+        with open('nltk/cleaned.txt', 'w') as file:
             file.write(text)
         
         sentences = self.tokenize_sentence(sent_text)
@@ -58,13 +62,12 @@ class TextAnalyzer:
                 file.write(word + '\n')
 
         word_freq = self.word_frequency(words)
-        with open('nltk/word_freq.txt', 'w') as file:
+        with open('nltk/top10words.txt', 'w') as file:
             for word, freq in word_freq:
                 file.write(f'{word}: {freq}\n')
         return sentences, words, word_freq
 
 ### Main ###
-
 if __name__ == "__main__":
     #import text file
     with open('alice29.txt', 'r') as file:
